@@ -1,0 +1,406 @@
+Introduction to Golang
+22 November 2017
+Tags: go golang 
+
+Nurul Arif Setiawan
+Product Manager, Navcore
+arif.setiawan@navcore.com
+
+* About me
+
+Manage product development:
+- Nextflow (BPM)
+- NextAPI (API Management)
+
+Team: Indonesia, Russia
+
+Stack: Golang, C++, Couchbase, PostgreSQL, Elasticsearch, Front-end (HTML, Javascript, CSS), Small dose of Node.js
+
+* Compiled vs Interpreted
+
+*Compiled*
+- often faster execution time
+- often slower development time
+e.g. C/C++, Java
+
+*Interpreted*
+- often faster development time
+- often slower execution time
+e.g. PHP, Python, Ruby, Javascript
+
+* Statically vs Dynamically Typed
+
+*Static* Type check at compile time
+.play static.go
+
+*Dynamic* Type check at run time
+.code dynamic.js
+
+* What is Golang?
+
+.image gopher.png
+
+Go programming language created at Google
+
+Compiled and statically typed
+
+Garbage collected
+
+Concurrency
+
+.link https://golang.org golang.org
+
+* A bit History
+
+.link https://talks.golang.org/2012/splash.article Go at Google: Language Design in the Service of Software Engineering
+
+Go is a programming language designed by Google to help solve Google's problems, and Google has big problems.
+
+.image datacenter.jpg
+
+* Why Golang?
+
+*Easy* of dynamically typed and interpreted language and *Efficiency* and *Safety* of statically typed and compiled language 
+
+Fast compilation
+
+Concurrency built in
+
+Cross platform
+
+Go tools
+
+* For Humans vs For Computers
+
+.image go-others-1.png
+
+* Code Readability vs Efficiency
+
+.image go-others-2.png
+
+* Benchmarks 1
+
+.link https://www.toptal.com/back-end/server-side-io-performance-node-php-java-go Node vs. PHP vs. Java vs. Go
+
+.image golang-compare.png
+
+* Benchmarks 2
+
+Running algorithms
+.link https://benchmarksgame.alioth.debian.org/u64q/go.html
+
+Web framework benchmark
+.link https://www.techempower.com/benchmarks/#section=data-r14&hw=ph&test=fortune
+
+Meaningful bencmark is benchmark that is specific to your use cases.
+
+* Idiomatic Go Journey
+
+Learn convention and idiom in Go.
+
+.link https://golang.org/doc/install 1. Getting Started 
+
+.link https://golang.org/ref/spec 2. The Go Programming Language Specification
+
+.link https://tour.golang.org/ 3. Tour of Go
+
+    // Run tour in local
+    go get golang.org/x/tour/gotour
+    gotour
+
+.link https://golang.org/doc/code.html 4. How to Write Go Code
+
+.link https://golang.org/doc/effective_go.html 5. Effective Go
+
+* Workspace
+
+1. Go programmers typically keep all their Go code in a single workspace.
+2. A workspace contains many version control repositories (managed by Git, for example).
+3. Each repository contains one or more packages.
+4. Each package consists of one or more Go source files in a single directory.
+5. The path to a package's directory determines its import path.
+
+    $GOPATH/
+        src/
+            github.com/user/repo/
+                mypkg/
+                    mysrc1.go
+                    mysrc2.go
+                cmd/mycmd/
+                    main.go
+        bin/
+               mycmd
+        pkg/
+
+
+* Workspace
+
+A workspace is a directory hierarchy with three directories at its root:
+
+- `src` contains Go source files,
+- `pkg` contains package objects, and
+- `bin` contains executable commands.
+
+Workspace location
+
+- Set $GOPATH
+
+    export GOPATH=/Users/arifsetiawan/Repository/Go
+
+- $GOPATH/bin must be in $PATH
+
+.link https://talks.golang.org/2014/organizeio.slide#1 See: Organizing Go code
+
+
+* Lets see some code
+
+* Hello World
+
+.play hello.go
+
+* Zero values
+
+Variables declared without an explicit initial value are given their zero value.
+
+.play variables.go
+
+* Short declaration
+
+Omit `var` and let Golang deduce the type
+
+    var i, j int = 1, 2
+	k := 3
+	c, python, java := true, false, "no!"
+
+* Multiple result
+
+.play multiple.go
+
+Common use is to return data and error
+
+    func Open(name string) (file *File, err error)
+
+* Error handling
+
+No exception. Function return error and caller check error
+
+    f, err := os.Open("filename.ext")
+    if err != nil {
+        log.Fatal(err)
+    }
+    // do something with the open *File f
+
+* For for While
+
+No `while` or `do-while`. Only `for`.
+
+    // Like a C for
+    for init; condition; post { }
+
+    // Like a C while
+    for condition { }
+
+    // Like a C for(;;)
+    for { }
+
+* Pointer
+
+A pointer holds the memory address of a value.
+
+.play pointer.go
+
+* Array and Slice
+
+Array: Fixed length collection of values
+
+    var buffer [256]byte
+
+Slice: Reference to underlying array. Flexible length.
+
+    var slice []byte
+
+.play slice-operator.go
+
+* Map
+
+.play map.go
+
+* Make function
+
+The built-in function `make(T, args)` can be used to create slices, maps, and channels.
+
+    a := make([]int, 5)
+    m := make(map[string]string)
+    c := make(chan int)
+
+* Range
+
+Use range to iterate slice and map
+
+    for i, v := range slice {
+        // do something
+    }
+
+    for k, v := range map {
+        // do something
+    }
+
+* Blank Identifier
+
+The Go compiler pretty much disallows variables that are declared but not used
+
+    for i, myvalue := range myvar {
+        total += mvalue
+    }
+
+If not used, use blank identifier `_`
+
+    for _, myvalue := range x {
+        total += myvalue
+    }
+
+* Defer
+
+A defer statement defers the execution of a function until the surrounding function returns.
+
+.play defer.go
+
+Usually used to deal with situations such as resources that must be released regardless of which path a function takes to return
+
+    src, err := os.Open(srcName)
+    if err != nil {
+        return
+    }
+    defer src.Close()
+
+* Struct
+
+Collection of field
+
+.code -edit struct.go
+
+* Method
+
+A method is a function with a special receiver argument.
+
+The receiver appears in its own argument list between the func keyword and the method name.
+
+.code -edit struct-method.go
+
+* Exported Names
+
+.code -edit module/module.go
+
+* Interface
+
+An interface type is defined as a set of method signatures.
+
+A value of interface type can hold any value that implements those methods.
+
+.code -edit interface.go
+
+* Interfaces are implemented implicitly
+
+.code -edit interface-implementation.go
+
+* Empty Interface
+
+The interface type that specifies zero methods is known as the empty interface:
+
+    interface{}
+
+An empty interface may hold values of any type. (Every type implements at least zero methods.)
+
+Empty interfaces are used by code that handles values of unknown type. For example, fmt.Print takes any number of arguments of type interface{}.
+
+* Empty Interface
+
+.play empty-interface.go
+
+* JSON Marshall 
+
+.play json.go
+
+* JSON Unmarshall 
+
+.play jsonun.go
+
+* Concurrency
+
+.link https://talks.golang.org/2012/waza.slide#1 Concurrency is not Parallelism
+
+*Concurrency* is about dealing with lots of things at once.
+
+*Parallelism* is about doing lots of things at once.
+
+Concurrency is a way to structure a program by breaking it into pieces that can be executed independently.
+
+Concurrency is about structure, parallelism is about execution.
+
+* Single Gopher
+
+.image gophersimple1.jpg
+
+* Concurrent Gopher
+
+.image gophersimple4.jpg
+
+* Goroutines
+
+It's an independently executing function, launched by a go statement.
+
+We can call it lightweight thread
+
+* Goroutines
+
+.play goroutine.go
+
+* Channel
+
+Don't communicate by sharing memory, share memory by communicating.
+
+    ch <- v    // Send v to channel ch.
+    v := <-ch  // Receive from ch, and assign value to v.
+
+* Channel example
+
+.play channels.go
+
+* Go Tools
+
+.image standards.png
+
+* Go Tools
+
+gofmt - formats your code according to the only acceptable way of formatting it.
+
+go vet - analysing Go code and finding common mistakes
+
+golint - checks your code for style violations. Follows the style that is used internally by Google, which is generally accepted by the open source Go community as well 
+
+godoc - extracts and generates documentation for Go programs.
+
+go get - get third party library
+
+and many others, including this presentation.
+
+* Development and Deployment
+
+Visual Studio Code with Go plugin
+
+.link https://code.visualstudio.com/docs/languages/go
+
+Use `dep` to manage dependency
+
+.link https://github.com/golang/dep
+
+* Cross Platform made Easy
+
+    GOOS=linux go build -o super-app
+    GOOS=windows go build -o super-app
+    GOOS=darwin go build -o super-app
+    GOOS=linux GOARCH=arm  go build -o super-app
+
+* Ready to Go?
+
+.image golang.gif
